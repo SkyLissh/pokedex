@@ -7,11 +7,15 @@ import { Pokemon } from "@/schemas/pokemon/pokemon";
 export const usePokemons = () => {
   const result = useQuery({
     queryKey: ["pokemons"],
+    retry: false,
     queryFn: async () => {
-      const stored = await AsyncStorage.getItem("pokemons");
+      const stored = (
+        await AsyncStorage.multiGet(Array.from({ length: 11 }, (_, i) => `pokemons-${i}`))
+      ).map((e) => e[1]);
 
-      if (stored) {
-        return Pokemon.array().parse(JSON.parse(stored));
+      if (!stored.includes(null)) {
+        const x = stored.map((e) => Pokemon.array().parse(JSON.parse(e!)));
+        return x.flat();
       }
 
       const res = await fetch("https://pokeapi.co/api/v2/pokemon?limit=10000");
@@ -19,7 +23,7 @@ export const usePokemons = () => {
 
       const chunks = data.results.reduce(
         (acc: { name: string; url: string }[][], curr, i) => {
-          if (i % 400 === 0) {
+          if (i % 100 === 0) {
             acc.push([]);
           }
           acc[acc.length - 1].push(curr);
@@ -30,7 +34,9 @@ export const usePokemons = () => {
 
       const pokemons: Pokemon[] = [];
 
-      for (const chunk of chunks) {
+      for (let i = 0; i < chunks.length; i++) {
+        const chunk = chunks[i];
+
         const p = await Promise.all(
           chunk.map(async (pokemon) => {
             const item = await fetch(pokemon.url);
@@ -38,10 +44,9 @@ export const usePokemons = () => {
           })
         );
 
+        await AsyncStorage.setItem(`pokemons-${i}`, JSON.stringify(p));
         pokemons.push(...p);
       }
-
-      await AsyncStorage.setItem("pokemons", JSON.stringify(pokemons));
 
       return pokemons;
     },

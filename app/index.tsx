@@ -6,6 +6,7 @@ import { FlashList } from "@shopify/flash-list";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { PokeCard } from "@/components/poke-card";
+import { Input } from "@/components/ui/input";
 
 import { usePokemons } from "@/hooks/use-pokemons";
 
@@ -13,22 +14,29 @@ import { Type } from "@/schemas/pokemon";
 
 import { colorByType } from "@/functions/color-by-type";
 import { ChevronDown } from "@/functions/icons/ChevronDown";
+import { Search } from "@/functions/icons/Search";
 import { cn } from "@/functions/utils";
 
 export default function Page() {
   const { data, error, isLoading } = usePokemons();
   const [type, setType] = useState<Type | undefined>();
+  const [name, setName] = useState("");
   const bottomSheetRef = useRef<BottomSheetModal>(null);
 
   const filteredData = useMemo(() => {
     if (!data) return [];
 
-    if (!type) return data;
+    const filteredType = type
+      ? data.filter((pokemon) => pokemon.types.some((t) => t.type.name === type))
+      : data;
+    const filteredName = name
+      ? filteredType.filter((pokemon) =>
+          pokemon.name.toLowerCase().includes(name.toLowerCase())
+        )
+      : filteredType;
 
-    return data.filter((pokemon) => {
-      return pokemon.types.some((t) => t.type.name === type);
-    });
-  }, [data, type]);
+    return filteredName;
+  }, [data, type, name]);
 
   const bgColor = type ? colorByType(type) : "#333333";
 
@@ -37,6 +45,7 @@ export default function Page() {
       <SafeAreaView>
         <View className="flex items-center justify-center">
           <Text>Error</Text>
+          <Text>{error.message}</Text>
         </View>
       </SafeAreaView>
     );
@@ -55,6 +64,14 @@ export default function Page() {
   return (
     <SafeAreaView>
       <View className="flex flex-col gap-4 p-4">
+        <Input
+          placeholder="Search by name"
+          value={name}
+          onChangeText={setName}
+          icon={<Search className="text-black" />}
+          iconPosition="start"
+        />
+
         <View className="flex flex-row gap-4">
           <Pressable
             className={cn(
