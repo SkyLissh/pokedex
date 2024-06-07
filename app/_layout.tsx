@@ -1,13 +1,19 @@
 import "@/global.css";
 
 import { useCallback } from "react";
-import { View } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import { useFonts } from "expo-font";
+import { Image } from "expo-image";
 import { Slot } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 
+import { BottomSheetModalProvider, BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { cssInterop } from "nativewind";
+
+cssInterop(Image, { className: "style" });
+cssInterop(BottomSheetScrollView, { className: "contentContainerStyle" });
 
 SplashScreen.preventAutoHideAsync();
 
@@ -37,9 +43,11 @@ export default function Layout() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <View onLayout={onLayoutRootView}>
-        <Slot />
-      </View>
+      <GestureHandlerRootView className="grow" onLayout={onLayoutRootView}>
+        <BottomSheetModalProvider>
+          <Slot />
+        </BottomSheetModalProvider>
+      </GestureHandlerRootView>
     </QueryClientProvider>
   );
 }

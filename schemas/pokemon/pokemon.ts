@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { Ability } from "./ability";
-import { Type } from "./type";
+import { TypeInfo } from "./type-info";
 
 export const Pokemon = z.object({
   abilities: z.array(Ability),
@@ -48,7 +48,7 @@ export const Pokemon = z.object({
       stat: z.object({ name: z.string(), url: z.string().url() }),
     })
   ),
-  types: z.array(Type),
+  types: z.array(TypeInfo),
   name: z.string(),
 });
 
