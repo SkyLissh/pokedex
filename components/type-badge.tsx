@@ -14,9 +14,14 @@ export function TypeBadge({ type }: { type: TypeInfo }) {
   const image = imageByType(type.type.name);
 
   return (
-    <View className={clsx("flex flex-row items-center gap-2 rounded-full p-2", bgColor)}>
+    <View
+      className={clsx(
+        "flex flex-row items-center gap-2 rounded-full py-2 pl-2 pr-4",
+        bgColor
+      )}
+    >
       <View className="flex size-8 items-center justify-center rounded-full bg-white p-2">
-        <Image className="size-full" source={image} />
+        <Image className="size-full" source={image} contentFit="contain" />
       </View>
       <Text className="text-base font-bold capitalize text-white">{type.type.name}</Text>
     </View>
