@@ -4,14 +4,14 @@ import { Image } from "expo-image";
 
 import { clsx } from "clsx";
 
-import type { TypeInfo } from "@/schemas/pokemon";
+import type { Type } from "@/schemas/pokemon";
 
 import { colorByType } from "@/functions/color-by-type";
 import { imageByType } from "@/functions/image-by-type";
 
-export function TypeBadge({ type }: { type: TypeInfo }) {
-  const bgColor = colorByType(type.type.name);
-  const image = imageByType(type.type.name);
+export function TypeBadge({ type }: { type: Type }) {
+  const bgColor = colorByType(type);
+  const image = imageByType(type);
 
   return (
     <View
@@ -23,7 +23,7 @@ export function TypeBadge({ type }: { type: TypeInfo }) {
       <View className="flex size-8 items-center justify-center rounded-full bg-white p-2">
         <Image className="size-full" source={image} contentFit="contain" />
       </View>
-      <Text className="text-base font-bold capitalize text-white">{type.type.name}</Text>
+      <Text className="text-base font-bold capitalize text-white">{type}</Text>
     </View>
   );
 }

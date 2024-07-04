@@ -13,5 +13,8 @@ export const useImageColors = (url: string) => {
     }).then(setColors);
   }, [url]);
 
-  return colors;
+  if (colors?.platform === "android") return colors.dominant;
+  if (colors?.platform === "ios") return colors.background;
+
+  return undefined;
 };

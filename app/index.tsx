@@ -4,8 +4,8 @@ import { View } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { PokeCard } from "@/components/cards/poke-card";
 import { Loader } from "@/components/loader";
-import { PokeCard } from "@/components/poke-card";
 import { TypeSelectionSheet } from "@/components/type-selection-sheet";
 import { Input } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
@@ -57,26 +57,26 @@ export default function Page() {
         <View className="flex flex-row gap-4">
           <TypeSelectionSheet value={type} onSelect={setType} />
         </View>
-
-        <View className="flex w-full grow flex-row">
-          {filteredData.length > 0 && (
-            <FlashList
-              data={filteredData}
-              estimatedItemSize={126}
-              ItemSeparatorComponent={({ index }) => <View key={index} className="h-4" />}
-              renderItem={({ item }) => {
-                return (
-                  <PokeCard
-                    id={item.id}
-                    name={item.name}
-                    image={item.sprites[0].sprite.front_default}
-                    types={item.types}
-                  />
-                );
-              }}
-            />
-          )}
-        </View>
+      </View>
+      <View className="h-full w-full px-4 pb-4">
+        {filteredData.length > 0 && (
+          <FlashList
+            keyExtractor={(item) => item.id.toString()}
+            data={filteredData}
+            estimatedItemSize={126}
+            ItemSeparatorComponent={({ index }) => <View key={index} className="h-4" />}
+            renderItem={({ item }) => {
+              return (
+                <PokeCard
+                  id={item.id}
+                  name={item.name}
+                  image={item.sprites[0].sprite.front_default}
+                  types={item.types}
+                />
+              );
+            }}
+          />
+        )}
       </View>
     </SafeAreaView>
   );
