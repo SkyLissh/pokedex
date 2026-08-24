@@ -50,7 +50,3 @@ Requires Node 20+. Run in Expo Go or a simulator. Works on Android, iOS, and web
 - Real server-state management (TanStack Query + GraphQL)
 - Performance on lists (FlashList) and motion (reanimated)
 - A polished, sheet-driven interaction model
-
----
-
-*Built by [Alisson "SkyLissh" Hernandez] — React Native, TypeScript, and cross-platform mobile. This is a personal portfolio project.*
